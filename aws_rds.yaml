@@ -1,1 +1,13 @@
 # Provision AWS RDS
+
+#iam user
+#add VPC
+#add VPC peering
+#add 3 subnet
+#add internet gateway
+#add route table for default
+#add route table for internet gateway
+#add aws security group
+#add rds node
+#add rds_parameter
+#add parameter group
