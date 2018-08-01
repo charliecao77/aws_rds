@@ -1,7 +1,4 @@
 # Provision AWS RDS
-
-
-
 Parameters:
   RDSUserAdmin:
     Type: String
@@ -38,7 +35,46 @@ Resources:
     Type: AWS::IAM::AccessKey
     Properties: 
       UserName: !Ref RUserAdmin
-
+  RVPC:
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: '10.41.0.0/16'
+      Tags:
+        - Key: Name
+          Value: RDS-VPC
+  RSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 
+        "Fn::Join" : ['',[!Ref "AWS::Region",'a']]
+      CidrBlock: '10.41.1.0/24'
+      VpcId: !Ref RVPC
+      Tags:
+        - Key: Name
+          Value: 
+            "Fn::Join" : ["",[!Ref "AWS::Region",'a']]
+  RSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 
+        "Fn::Join" : ['',[!Ref "AWS::Region",'b']]
+      CidrBlock: '10.41.2.0/24'
+      VpcId: !Ref RVPC
+      Tags:
+        - Key: Name
+          Value: 
+            "Fn::Join" : ["",[!Ref "AWS::Region",'b']]
+  RSubnet03:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: 
+        "Fn::Join" : ['',[!Ref "AWS::Region",'c']]
+      CidrBlock: '10.41.3.0/24'
+      VpcId: !Ref RVPC
+      Tags:
+        - Key: Name
+          Value: 
+            "Fn::Join" : ["",[!Ref "AWS::Region",'c']]
 
 Outputs:
   MyStacksRegion:
