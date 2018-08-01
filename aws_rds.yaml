@@ -1,6 +1,56 @@
 # Provision AWS RDS
 
+
+
+Parameters:
+  RDSUserAdmin:
+    Type: String
+    Default: RDS.User.Admin
+  UserAdmin:
+    Type: String
+    Default: DB_Admin
+
 #iam user
+Resources:
+  RUserAdmin:
+    Type: AWS::IAM::User
+    Properties: 
+      Path: "/"
+      LoginProfile:
+        Password: myP@ssW0rd
+      UserName: RDS.User.Admin
+      Policies:
+        - PolicyName: PolicyRDSConnect
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ["rds-db:connect"]
+                Resource: ["Fn::Join" : ["",['arn:aws:rds-db:', !Ref "AWS::Region",':',!Ref "AWS::AccountId",':dbuser:*/',!Ref UserAdmin]]]
+        - PolicyName: PolicyRDSFullAccesses
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ["rds-db:*"]
+                Resource: "*"
+  RAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties: 
+      UserName: !Ref RUserAdmin
+
+
+Outputs:
+  MyStacksRegion:
+    Value: !Ref AWS::Region        
+  MyStacksRDSUserAdmin:
+    Value: !Ref UserAdmin
+  MyStacksAccessKey:
+    Value: !Ref "RAccessKey"
+  MyStacksSecretAccessKey:
+    Value: 
+      "Fn::GetAtt" : ["RAccessKey","SecretAccessKey"]
+
 #add VPC
 #add VPC peering
 #add 3 subnet
